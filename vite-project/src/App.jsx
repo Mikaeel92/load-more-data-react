@@ -10,8 +10,8 @@ const App = () => {
   const fetchData = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`https://dummyjson.com/products?limit=10&skip=${ count === 0 ? 0 : count * 20 }`)
-      const data = response.json()
+      const response = await fetch(`https://dummyjson.com/products?limit=20&skip=${ count === 0 ? 0 : count * 20 }`)
+      const data = await response.json()
       if(data && data.products) {
         setProducts((prevData) => [...prevData, ...data.products])
         setLoading(false)
@@ -23,7 +23,7 @@ const App = () => {
 
   useEffect(() => {
     fetchData()
-  }, [count])
+  }, [])
 
   if(errorMsg !== null) {
     return <div>Error, {errorMsg} Data Is Loading... Please Wait</div>
@@ -34,7 +34,24 @@ const App = () => {
   }
 
   return (
-    <div className='text-green-700 text-3xl'>App</div>
+    <div className='flex flex-col gap-4 items-center justify-center'>
+      <div className='grid grid-cols-4 gap-4'>
+      {
+        products && products.length ?
+        products.map((item, index) => (
+          <div className='p-4 gap-2 flex flex-col rounded-md border border-gray-500' key={index}>
+            <img
+            src={item.thumbnail}
+            alt={item.title}
+            className='h-[200px] w-[200px]'
+            />
+            <p>{item.title}</p>
+          </div>
+        ))
+        : null
+      }
+      </div>
+    </div>
   )
 }
 
