@@ -9,15 +9,21 @@ const App = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('')
+      setLoading(true)
+      const response = await fetch('https://dummyjson.com/products?limit=10&skip=10')
+      const data = response.json()
+      if(data && data.products) {
+        setProducts((prevData) => [...prevData, ...data.products])
+        setLoading(false)
+      }
     } catch (error) {
-
-    }
-  }
+      setErrorMsg(error)
+      setLoading(false)
+    }}
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [count])
 
   if(errorMsg !== null) {
     return <div>Error, {errorMsg} Data Is Loading... Please Wait</div>
